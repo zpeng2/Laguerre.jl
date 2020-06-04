@@ -1,0 +1,13 @@
+name = "Laguerre"
+uuid = "14f5e532-25f4-4620-b79e-017782cdf636"
+authors = ["Zhiwei Peng"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
