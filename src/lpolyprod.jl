@@ -1,47 +1,38 @@
 
-function laprodexpand(r::Int, s::Int)
-    # expand the product of two Laguerre polynomials into a linear
-    # combination of Laguerre polynomials.
-    # Lr(x)Ls(x) into sum_{t}C_{rst}Lt(x)
-    orders = abs(r - s):(r + s) |> collect
-    coeffs = [Crst(r, s, t) for t in orders]
-    return orders, coeffs
-end
 
+# function Crst_direct(r::Int, s::Int, t::Int)
+#     # direct method to calculate Crst
+#     # see Products of Laguerre Polynomials
+#     # Joseph Gillis and  George Weiss
+#     # Mathematics of Computation, Vol. 14, No. 69 (Jan., 1960), pp. 60-63
+#     # this function implements equation (7)
+#     # this is computationally expensive.
+#     # use recurrence relation instead.
+#     (r >= 0 && s >= 0 && t >= 0) || throw("negative orders not allowed.")
+#     # t needs to be in |r-s| and r+s
+#     # otherwise the coef is zero
+#     if t < abs(r - s) || t > r + s
+#         return 0
+#     end
 
-function Crst_direct(r::Int, s::Int, t::Int)
-    # direct method to calculate Crst
-    # see Products of Laguerre Polynomials
-    # Joseph Gillis and  George Weiss
-    # Mathematics of Computation, Vol. 14, No. 69 (Jan., 1960), pp. 60-63
-    # this function implements equation (7)
-    # this is computationally expensive.
-    # use recurrence relation instead.
-    (r >= 0 && s >= 0 && t >= 0) || throw("negative orders not allowed.")
-    # t needs to be in |r-s| and r+s
-    # otherwise the coef is zero
-    if t < abs(r - s) || t > r + s
-        return 0
-    end
-
-    p = r + s - t
-    # define nmax and nmin and find them
-    nmax = r
-    if s < nmax
-        nmax =  s
-    end
-    if p < nmax
-        nmax = p
-    end
-    nmin = ceil(Int, p / 2)
-    # use rational numbers for now to keep it exact.
-    C = 0 // 1
-    for n in nmin:nmax
-        C += (2 // 1)^(2 * n) * factorial(r + s - n) / ( factorial(r - n) * factorial(s - n) * factorial(2n - p) * factorial(p - n))
-    end
-    # prefactor
-    C *= (-1 // 2)^p
-end
+#     p = r + s - t
+#     # define nmax and nmin and find them
+#     nmax = r
+#     if s < nmax
+#         nmax =  s
+#     end
+#     if p < nmax
+#         nmax = p
+#     end
+#     nmin = ceil(Int, p / 2)
+#     # use rational numbers for now to keep it exact.
+#     C = 0 // 1
+#     for n in nmin:nmax
+#         C += (2 // 1)^(2 * n) * factorial(r + s - n) / ( factorial(r - n) * factorial(s - n) * factorial(2n - p) * factorial(p - n))
+#     end
+#     # prefactor
+#     C *= (-1 // 2)^p
+# end
 
 
 function Crst(r::Int, s::Int, t::Int)
@@ -79,30 +70,42 @@ end
 
 
 
+function laprodexpand(r::Int, s::Int)
+    # expand the product of two Laguerre polynomials (with coefficients being 1) into a linear
+    # combination of Laguerre polynomials.
+    # Lr(x)Ls(x) into sum_{t}C_{rst}Lt(x)
+    orders = abs(r - s):(r + s) |> collect
+    coeffs = [Crst(r, s, t) for t in orders]
+    return orders, coeffs
+end
 
-# function Base.:*(l1::La, l2::La)
-#     # take two linear combinations of Laguerre polynomials.
-#     # and reexpand into a single Laguerre polynomial series.
-#     lst = []
 
-#     for (r, c1) in l1
-#         for (s, c2) in l2
-#             # construct the product 
-#             orders, coeffs = laprodexpand(r, s)
-#             # convert to float
-#             coeffs = Float64.(coeffs)
-#             # add this to the list
-#             la = La(orders, coeffs)
-#             la = la * c1 * c2
-#             push!(lst, la)
-#         end
-#     end
-#     # add elements in the list.
-#     la = lst[1]
-#     if length(lst) > 1
-#         for i = 2:length(lst)
-#             la += lst[i]
-#         end
-#     end
-#     return la
-# end
+
+
+
+function Base.:*(l1::LaguerrePolynomial{T}, l2::LaguerrePolynomial{S}) where {T,S}
+    # take two linear combinations of Laguerre polynomials.
+    # and reexpand into a single Laguerre polynomial series.
+    lst = []
+    R = promote_type(T, S)
+    for (r, c1) in l1
+        for (s, c2) in l2
+            # construct the product 
+            orders, coeffs = laprodexpand(r, s)
+            # convert to type R
+            coeffs = R.(coeffs)
+            # add this to the list
+            la = LaguerrePolynomial(orders, coeffs)
+            la = la * c1 * c2
+            push!(lst, la)
+        end
+    end
+    # add elements in the list.
+    la = lst[1]
+    if length(lst) > 1
+        for i = 2:length(lst)
+            la += lst[i]
+        end
+    end
+    return la
+end
