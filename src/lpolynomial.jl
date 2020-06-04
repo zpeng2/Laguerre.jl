@@ -117,6 +117,13 @@ end
 
 
 
-
+function Base.:/(la::LaguerrePolynomial{T}, num::S) where {S <: Number} where T
+    num != 0 || throw(ErrorException("division by zero not allowed."))
+    # divide a LaguerrePolynomial by a number can be done.
+    R = promote_type(T, S)
+    coefs = R.(copy(la.coeffs))
+    coefs /= num
+    return LaguerrePolynomial(la.orders, coefs)
+end
 
 

@@ -52,11 +52,17 @@ end
 
 
 
-@testset "LaguerrePolynomial constant multiplication" begin
+@testset "LaguerrePolynomial constant operation" begin
     orders = [0,2,3]
     coeffs = [1, 2, 2]
     L1 = LaguerrePolynomial(orders, coeffs)
     L2 = L1 * 3
+    # multiplication by a number
     @test L2.orders == [0,2,3]
     @test L2.coeffs == 3 * coeffs
+    # division by a number
+    @test_throws ErrorException L1 / 0
+    L3 = L1 / 2
+    @test L3.orders == L1.orders
+    @test L3.coeffs == L1.coeffs / 2
 end
