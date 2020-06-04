@@ -1,12 +1,3 @@
-
-# struct La
-#     # representation of Laguerre polynomials Ln(x)
-#     order::Int
-# end
-
-# Base.show(io::IO, la::La) = println("L$(la.order)")
-# for simplicity, represent a single Laguerre polynomial using LaLC too.
-
 """
 A linear combination of Laguerre polynomials.
 """
@@ -34,9 +25,13 @@ end
 
 
 function LaguerrePolynomial(order::Int)
-    # coef 1
+    # A single Laguerre Polynomial with coefficient 1.
     return LaguerrePolynomial(order, 1)
 end
+
+
+# make LaguerrePolynomial iterable.
+Base.iterate(la::LaguerrePolynomial{T}, state = 1) where T = state > la.len ? nothing : ((la.orders[state], la.coeffs[state]), state + 1)
 
 
 
@@ -52,21 +47,21 @@ function lashow(la::LaguerrePolynomial{T}) where T
     return st
 end
 
+
 Base.show(io::IO, la::LaguerrePolynomial{T}) where T = println(lashow(la))
 
-# make La type iterable.
-Base.iterate(la::LaguerrePolynomial{T}, state = 1) where T = state > la.len ? nothing : ((la.orders[state], la.coeffs[state]), state + 1)
 
 
-# algebra with LaLC
+
 function Base.:+(self::LaguerrePolynomial{T}, other::LaguerrePolynomial{S}) where {T,S} 
+    # addition of two Laguerre Polynomials.
     l = addla(self, other)
     return l
 end
 
 
 function addla(l1::LaguerrePolynomial{T}, l2::LaguerrePolynomial{S}) where {T,S}
-
+    # implementation of addition of Laguerre Polynomials
     # need to copy to create a new array.
     orders = copy(l1.orders)
     coefs = copy(l1.coeffs)
@@ -87,6 +82,7 @@ function addla(l1::LaguerrePolynomial{T}, l2::LaguerrePolynomial{S}) where {T,S}
     return LaguerrePolynomial(orders, coefs)
 end
 
+
 # can add LaguerrePolynomial to a constant, because a constant is just const*L0
 function Base.:+(la::LaguerrePolynomial{T}, scalar::S) where {S <: Number} where T
     R = promote_type(T, S)
@@ -94,18 +90,26 @@ function Base.:+(la::LaguerrePolynomial{T}, scalar::S) where {S <: Number} where
     return la + L0
 end
 
+# order doesn't matter in addition.
+function Base.:+(scalar::S, la::LaguerrePolynomial{T}) where T where {S <: Number} 
+    return la + scalar
+end
+
 
 function Base.:*(l::LaguerrePolynomial{T}, scalar::S) where {S <: Number} where T
-    
+    # product of LaguerrePolynomial with a constant.
     R = promote_type(T, S)
     coefs = R.(copy(l.coeffs))
     coefs *= scalar
     return LaguerrePolynomial(l.orders, coefs)
 end
 
+# order doesnt matter.
 Base.:*(scalar::S, l::LaguerrePolynomial{T}) where T where S <: Number = l * scalar
 
+
 function Base.:-(l1::LaguerrePolynomial{T}, l2::LaguerrePolynomial{S}) where {T,S}
+    # subtraction of two Laguerre Polynomials.
     R = promote_type(T, S)
     minus1 = R(-1)
     return l1 + minus1 * l2
