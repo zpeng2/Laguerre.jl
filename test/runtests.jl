@@ -1,6 +1,7 @@
 using Laguerre
 using Test
 
+
 @testset "LaguerrePolynomial construction" begin
     # test construction of LaguerrePolynomial
     orders = [0,2,3]
@@ -17,7 +18,15 @@ using Test
     L = LaguerrePolynomial(3)
     @test L.orders == [3]
     @test L.coeffs == [1]
+    # test throw
+    @test_throws DimensionMismatch LaguerrePolynomial([1,2], [2,3,2])
+    @test_throws DomainError LaguerrePolynomial(-2, 1)
+    # test string representation
+    L = LaguerrePolynomial([2,3], [1,2])
+    st = Laguerre.lashow(L)
+    @test st == "(1)L2 + (2)L3"
 end
+
 
 @testset "LaguerrePolynomial addition" begin
     L1 = LaguerrePolynomial(2, 1 // 2)

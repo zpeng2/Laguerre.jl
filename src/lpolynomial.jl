@@ -7,8 +7,8 @@ struct LaguerrePolynomial{T <: Number}
     coeffs::Vector{T} # coefficients of Laguerre polynomials.
     len::Int # length of orders
     function LaguerrePolynomial(orders::Vector{Int}, coeffs::Vector{T}) where T 
-        length(orders) == length(coeffs) || throw("MisMatch: Dimensions mismatch.")
-        all(orders .>= 0) || throw("negative orders not allowed.")
+        length(orders) == length(coeffs) || throw(DimensionMismatch("orders and coeffs are of different length."))
+        all(orders .>= 0) || throw(DomainError("negative orders not allowed."))
         # arrange in a ascending order.
         perm = sortperm(orders)
         orders = orders[perm]
