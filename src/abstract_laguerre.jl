@@ -113,3 +113,28 @@ function Base.:(==)(l1::AbstractLaguerre{T}, l2::AbstractLaguerre{S}) where {T,S
     end
     return (l1.orders == l2.orders) && (l1.coeffs == l2.coeffs)
 end
+
+function simplify(l::AbstractLaguerre{T}) where T
+    # remove zero elements from LaguerrePolynomial or LaguerreFunction
+    # find nonzero coeffs
+    idx = findall(l.coeffs .!= 0)
+    if isempty(idx)
+        # all zeros.
+        # just return the zero order term with 0 coefficient.
+        coeffs = 0
+        orders = 0
+    elseif length(idx) == l.len
+        # all coefficients are nonzero.
+        # nothing needs to be done.
+        return l
+    else
+        # some are zero.
+        coeffs = l.coeffs[idx]
+        orders = l.orders[idx]
+    end
+    # get the symbol of the typename.
+    typename = nameof(typeof(l))
+    # constructor expression.
+    expr = :($typename($orders, $coeffs))
+    return eval(expr)
+end
