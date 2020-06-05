@@ -1,4 +1,4 @@
-@testset "LaguerrePolynomial construction" begin
+@testset "LaguerrePolynomial" begin
     # test construction of LaguerrePolynomial
     orders = [0,2,3]
     coeffs = [1.0, 2, 0.5]
@@ -48,7 +48,7 @@ end
 
 
 
-@testset "LaguerrePolynomial constant operation" begin
+@testset "LaguerrePolynomial * number" begin
     orders = [0,2,3]
     coeffs = [1, 2, 2]
     L1 = LaguerrePolynomial(orders, coeffs)
@@ -61,4 +61,28 @@ end
     L3 = L1 / 2
     @test L3.orders == L1.orders
     @test L3.coeffs == L1.coeffs / 2
+end
+
+@testset "LaguerrePolynomials product" begin
+    k = 5
+    L2 = LaguerrePolynomial(2, 1.0)
+    Lk = LaguerrePolynomial(k, 1.0)
+    L = L2 * Lk
+    # L2Lk = k(k-1)/2 L_{k-2} -2k(k-1)L_{k-1}
+    #   +(3k^2-k)L_k -2k(k+1)L_{k+1} 
+    #   (k+1)(k+2)/2 L_{k+2}
+    res = k * (k - 1) / 2 * LaguerrePolynomial(k - 2)  -
+    2 * k * (k - 1) * LaguerrePolynomial(k - 1) +
+    (3 * k^2 - k) * LaguerrePolynomial(k) -
+    2 * k * (k + 1) * LaguerrePolynomial(k + 1) +
+    (k + 1) * (k + 2) / 2 * LaguerrePolynomial(k + 2)
+    @test L == res
+
+    # L1Lk = k L_{k-1} -2k L_k +(k+1) L_{k+1}
+    L1 = LaguerrePolynomial(1, 1.0)
+    Lk = LaguerrePolynomial(k, 1.0)
+    L = L1 * Lk
+    res = k * LaguerrePolynomial(k - 1) - 2 * k * LaguerrePolynomial(k) + (k + 1) * LaguerrePolynomial(k + 1)
+    @test L ==  res
+    @test Lk * LaguerrePolynomial(0) == Lk
 end

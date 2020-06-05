@@ -19,7 +19,7 @@ struct LaguerrePolynomial{T} <: AbstractLaguerre{T}
 end
 
 
-function LaguerrePolynomial(order::Int, coef::T) where T 
+function LaguerrePolynomial(order::Int, coef::Number) 
     # handle a single Laguerre polynomial.
     return LaguerrePolynomial([order], [coef])
 end

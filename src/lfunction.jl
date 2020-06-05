@@ -20,7 +20,7 @@ end
 
 
 
-function LaguerreFunction(order::Int, coef::T) where T 
+function LaguerreFunction(order::Int, coef::Number)
     # handle a single Laguerre Function.
     return LaguerreFunction([order], [coef])
 end
