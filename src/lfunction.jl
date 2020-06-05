@@ -41,4 +41,4 @@ function Base.:*(la::LaguerrePolynomial{T}, lf::LaguerreFunction{S}) where {T,S}
     return LaguerreFunction(prod.orders, prod.coeffs)
 end
 
-function Base.*(lf::LaguerreFunction{T}, la::LaguerrePolynomial{S}) where {T, S} = la*lf
+Base .* (lf::LaguerreFunction{T}, la::LaguerrePolynomial{S}) where {T,S} = la * lf
