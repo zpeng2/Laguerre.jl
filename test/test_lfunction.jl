@@ -63,4 +63,12 @@
         @test L3.orders == L1.orders
         @test L3.coeffs == L1.coeffs / 2
     end
+
+    @testset "Laguerre simplify" begin
+        L1 = LaguerrePolynomial([2, 3], [1,1])
+        L2 = LaguerrePolynomial(2, 1)
+        res = LaguerrePolynomial(3, 1)
+        @test simplify(L1 - L2) == res
+        @test simplify(L1 - L1) == LaguerrePolynomial(0, 0)
+    end
 end

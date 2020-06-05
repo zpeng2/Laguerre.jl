@@ -114,6 +114,8 @@ function Base.:(==)(l1::AbstractLaguerre{T}, l2::AbstractLaguerre{S}) where {T,S
     return (l1.orders == l2.orders) && (l1.coeffs == l2.coeffs)
 end
 
+
+
 function simplify(l::AbstractLaguerre{T}) where T
     # remove zero elements from LaguerrePolynomial or LaguerreFunction
     # find nonzero coeffs
