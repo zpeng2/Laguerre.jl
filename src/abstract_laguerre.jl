@@ -105,3 +105,11 @@ function Base.:/(la::AbstractLaguerre{T}, num::S) where {S <: Number} where T
     return eval(expr)
 end
 
+
+# check equality of two LaguerrePolynomials or LaguerreFunctions
+function Base.:(==)(l1::AbstractLaguerre{T}, l2::AbstractLaguerre{S}) where {T,S}
+    if (nameof(typeof(l1)) != nameof(typeof(l2)))
+        return false
+    end
+    return (l1.orders == l2.orders) && (l1.coeffs == l2.coeffs)
+end
