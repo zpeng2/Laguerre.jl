@@ -82,8 +82,8 @@ Base.:*(num::S, l::AbstractLaguerre{T}) where T where S <: Number = l * num
 
 function Base.:-(l1::AbstractLaguerre{T}, l2::AbstractLaguerre{S}) where {T,S}
     # subtraction of two LaguerrePolynomial or LaguerreFunction
-    nameof(typeof(l1)) == nameof(typeof(l2)) || throw(ErrorException("cannot subtract LaguerrePolynomial from a LaguerreFunction"))
-
+    # need to be the same type.
+    # no need to check it here, because addition will check .
     R = promote_type(T, S)
     minus1 = R(-1)
     return l1 + minus1 * l2
