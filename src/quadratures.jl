@@ -58,7 +58,7 @@ end
 function lgr_integrate(f::Function, N::Int)
     # numerical integration using Laguerre-Gauss-Radau quadrature.
     # from 0 to infinity.
-    x, w = laguerre_gauss_radau_nodes(N)
+    x, w = laguerre_gauss_radau(N)
     return sum(f.(x) .* w)
 end
 
@@ -85,7 +85,7 @@ function inverse_laguerre_transform(an::AbstractVector, x::AbstractArray)
     f = zeros(size(x))
 
     for (a, n) in zip(an, 0:N)
-        Lnh = lf.(n, x)
+        Lnh = eval_laguerre_function.(n, x)
         f += a * Lnh
     end
     return f
