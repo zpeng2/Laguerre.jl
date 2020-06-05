@@ -31,3 +31,12 @@ function LaguerreFunction(order::Int)
     return LaguerreFunction(order, 1)
 end
 
+
+function Base.:*(la::LaguerrePolynomial{T}, lf::LaguerreFunction{S}) where {T,S}
+    # A product of LaguerrePolynomial and LaguerreFunction can be represented by 
+    # LaguerreFunctions.
+    # construct a corresponding LaguerrePolynomial.
+    la2 = LaguerrePolynomial(lf.orders, lf.coeffs)
+    prod = la * la2
+    return LaguerreFunction(prod.orders, prod.coeffs)
+end
