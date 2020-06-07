@@ -16,5 +16,5 @@
     # test integration using Laguerre-Gauss-Radau quadrature.
     f1(x) = sin(x)^2 * exp(-x)  # -> 2/5
     N = 30
-    @test isapprox(lgr_integrate(f1, N), 2 / 5, atol = 1e-3, rtol = 1e-4)
+    @test isapprox(LGRquad(f1, N), 2 / 5, atol = 1e-3, rtol = 1e-4)
 end

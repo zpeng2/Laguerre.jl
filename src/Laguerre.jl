@@ -10,7 +10,7 @@ include("quadratures.jl")
 
 export LaguerrePolynomial, LaguerreFunction
 
-export laguerre_gauss_nodes, laguerre_gauss_radau_nodes, laguerre_gauss_radau, eval_laguerre_function, laguerre_transform, inverse_laguerre_transform,lgr_integrate, simplify
+export LGR, LGRquad, eval_laguerre_function, laguerre_transform, inverse_laguerre_transform, simplify
 
 
 end

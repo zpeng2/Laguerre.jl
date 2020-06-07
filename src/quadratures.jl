@@ -1,4 +1,4 @@
-function laguerre_gauss_nodes(alpha::Real, N::Int)
+function LGnodes(alpha::Real, N::Int)
     # generate nodes of Laguerre-Gauss quadrature nodes.
     alpha > -1 || error("alpha <= -1 not allowed.")
     j = 1:N |> collect
@@ -14,17 +14,17 @@ end
 
 
 
-function laguerre_gauss_radau_nodes(N::Int)
+function LGRnodes(N::Int)
     # Laguerre-Gauss-Radau quadrature nodes.
-    xi = laguerre_gauss_nodes(1.0, N - 1)
+    xi = LGnodes(1.0, N - 1)
     x = [0; xi]
     return x
 end
 
 
-function laguerre_gauss_radau(N::Int)
+function LGR(N::Int)
     # get nodes and weights for LGR.
-    x = laguerre_gauss_radau_nodes(N)
+    x = LGRnodes(N)
     LN = eval_laguerre_function.(N, x)
     # equation 7.37 in Shen, Tang & Wang.
     w = 1 ./ ( (N + 1) * LN.^2)
@@ -55,10 +55,10 @@ end
 
 
 
-function lgr_integrate(f::Function, N::Int)
+function LGRquad(f::Function, N::Int)
     # numerical integration using Laguerre-Gauss-Radau quadrature.
     # from 0 to infinity.
-    x, w = laguerre_gauss_radau(N)
+    x, w = LGR(N)
     return sum(f.(x) .* w)
 end
 
@@ -68,7 +68,7 @@ function laguerre_transform(f::Function, N::Int)
     # f = sum_{n=0}^N a_n Lnhat(x)
     # where Lnhat is the Laguerre function.
     # an = \sum_{j=0}^N f(x_j)Lnh(x_j)what_j
-    x, w = laguerre_gauss_radau(N)
+    x, w = LGR(N)
     an = zeros(N + 1)
     for i = 1:N + 1
         Ln = eval_laguerre_function.(i - 1, x)

@@ -70,5 +70,11 @@
         res = LaguerrePolynomial(3, 1)
         @test simplify(L1 - L2) == res
         @test simplify(L1 - L1) == LaguerrePolynomial(0, 0)
+
+        L1 = LaguerreFunction([2, 3], [1.0,1.0])
+        L2 = LaguerreFunction(2, 1.0)
+        res = LaguerreFunction(3, 1.0)
+        @test simplify(L1 - L2) == res
+        @test simplify(L1 - L1) == LaguerreFunction(0, 0)
     end
 end
