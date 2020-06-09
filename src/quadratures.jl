@@ -53,7 +53,24 @@ function eval_laguerre_function(n::Int, x::Real)
     return Lnew
 end
 
+function eval_LaguerreFunction(n::Int, x::Real)
+    # method in Shen, SIAM J NUMER ANAL, Vol 38, No 4, pp. 1113-1133
+    # STABLE AND EFFICIENT SPECTRAL METHODS IN UNBOUNDED
+    # DOMAINS USING LAGUERRE FUNCTIONS
+    signL0 = 1
+    d0 = 1
+    signL1 = sign(1 - x)
+    d1 = abs(1 - x)
+    if n == 0 
+        return exp(-x / 2)
+    end
+    if n == 1
+        return signL1 * d1
+    end
+    # TODO
 
+
+end
 
 function LGRquad(f::Function, N::Int)
     # numerical integration using Laguerre-Gauss-Radau quadrature.
