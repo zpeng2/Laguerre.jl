@@ -58,18 +58,31 @@ function eval_LaguerreFunction(n::Int, x::Real)
     # STABLE AND EFFICIENT SPECTRAL METHODS IN UNBOUNDED
     # DOMAINS USING LAGUERRE FUNCTIONS
     signL0 = 1
-    d0 = 1
-    signL1 = sign(1 - x)
-    d1 = abs(1 - x)
-    if n == 0 
-        return exp(-x / 2)
-    end
-    if n == 1
-        return signL1 * d1
-    end
-    # TODO
-
-
+    # TODO: need to indentify the error in the equations cited.
+    # d0 = 1
+    # signL1 = sign(1 - x)
+    # d1 = abs(1 - x) * exp(-x / 2)
+    # if n == 0 
+    #     return exp(-x / 2)
+    # end
+    # if n == 1
+    #     return signL1 * d1
+    # end
+    # for i = 2:n
+    #     # common term 
+    #     t = (2 * i - 1 - x) / i * signL1 * d1 * (d1 / d0)^(i - 2) - (1 - 1 / i) * signL0
+    #     signLi = sign(t)
+    #     di = d0^(1. - 2 / i) * abs(t)^(1.0 / n) 
+    #     # update old variables. 
+    #     signL0 = signL1
+    #     signL1 = signLi 
+    #     d0 = d1
+    #     d1  = di
+    #     if i == n 
+    #         return signLi * di^n
+    #     end
+    # end
+    
 end
 
 function LGRquad(f::Function, N::Int)
